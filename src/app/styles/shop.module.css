@@ -1,0 +1,157 @@
+/* styles/logoutButton.css */
+.logout-button {
+    background-color: #e53e3e;
+    color: #ffffff;
+    padding: 1rem 2rem; /* Adjust padding as needed for responsiveness */
+    border: none;
+    border-radius: 0.25rem;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: background-color 0.3s ease;
+    width: 100%; /* Make the button fill the container width */
+    max-width: 200px; /* Set a maximum width to avoid stretching on larger screens */
+    box-sizing: border-box; /* Include padding and border in the width calculation */
+    margin: 20px;
+  }
+  .Cart-button{
+    background-color: #3ee554;
+    color: #ffffff;
+    padding: 1rem 2rem; /* Adjust padding as needed for responsiveness */
+    border: none;
+    border-radius: 0.25rem;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: background-color 0.3s ease;
+    width: 100%; /* Make the button fill the container width */
+    max-width: 200px; /* Set a maximum width to avoid stretching on larger screens */
+    box-sizing: border-box; /* Include padding and border in the width calculation */
+    margin: 20px;
+  }
+  .logout-button:hover {
+    background-color: #c53030;
+  }
+
+ /* styles/banner.module.css */
+.banner {
+    position: relative;
+    overflow: hidden;
+   
+  }
+  
+  .bannerImage {
+    width: 100%;
+    height: auto;
+  }
+  
+  .content {
+    position: relative;
+    text-align: center;
+    color: #fff;
+    padding: 1rem;
+    max-width: 1200px; /* Set a max-width for the content */
+    margin: 0 auto; /* Center the content */
+  }
+  
+  .text {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+  
+  
+  
+  
+  
+  /* Add responsiveness */
+  @media (max-width: 768px) {
+    .text {
+      width: 90%;
+    }
+    .logout-button {
+        width: 20%;
+        font-size: 0.5rem;
+        padding: 0.5rem 1rem;
+    }
+    .Cart-button{
+        width: 20%;
+        font-size: 0.5rem;
+        padding: 0.5rem 1rem;
+    }
+  }
+  
+
+/* card css */
+.container p{
+    color: brown;
+}
+.wrapper{
+    margin: 2rem;
+    display: grid;
+    gap: 3rem;
+    grid-template-columns: 1fr;
+    justify-content: center;
+}
+.card{
+    box-shadow: 0 0 2px 1px #2a324b;
+    border-radius: 0.2rem;
+    min-width: 28rem;
+    display: flex;
+    
+}
+
+.cardbody{
+    margin: 1rem;
+    flex-grow: 1;
+
+}
+.cardtitle{
+    line-height: 1.4rem;
+    margin-bottom: 0.5rem;
+}
+.cardPrice{
+    line-height: 1.4rem;
+   
+    margin-top: 20px;
+}
+.cardimg{
+    width: 14rem;
+    height: 200px;
+    object-fit: cover;
+}
+.contacts{
+    margin-top: 9px;
+}
+
+.result{
+    text-align: center;
+    margin-top: 20%;
+    font-size: 20px;
+}
+@media screen and  (min-width:600px){
+    .wrapper{
+        grid-template-columns: repeat(auto-fit, minmax(15rem, 26rem));
+    }
+    .card{
+        flex-direction: column;
+        text-align: center;
+        min-width: 25rem;
+       
+    }
+    .cardimg{
+        width: 100%;
+        height: 25rem;
+    }
+    
+}
+
+.numberInput {
+    width: 100%;
+    padding: 0.5rem;
+    font-size: 1rem;
+    margin-top: 0.5rem;
+    border: 1px solid #ccc;
+    border-radius: 0.25rem;
+    box-sizing: border-box;
+  }
+  
