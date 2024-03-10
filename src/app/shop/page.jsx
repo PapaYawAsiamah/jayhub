@@ -171,7 +171,7 @@ const page = () => {
       {!resultState ? (
         <div className={styles.wrapper}>
           {filtered.map((product) => (
-            <div className={styles.card} key={product.id}>
+            <div className={styles.card} key={product.index}>
               <Image
                 className={styles.cardimg}
                 width="224"
