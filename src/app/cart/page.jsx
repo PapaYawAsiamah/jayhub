@@ -10,6 +10,7 @@ import {
   doc,
   updateDoc,
   sum,
+  getDocs,
 } from "firebase/firestore";
 import Image from "next/image";
 import Button from "@mui/material/Button";
@@ -29,7 +30,11 @@ import styles from "../styles/cart.module.css";
 import DeleteIcon from "@mui/icons-material/Delete";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { useTheme } from "@mui/material/styles";
-import TextField from '@mui/material/TextField';
+import TextField from "@mui/material/TextField";
+import MenuItem from "@mui/material/MenuItem";
+import FormControl from "@mui/material/FormControl";
+import Select from "@mui/material/Select";
+import InputLabel from "@mui/material/InputLabel";
 
 const page = () => {
   const router = usePathname();
@@ -129,19 +134,19 @@ const page = () => {
   };
 
   //const getting total
-  const [total, setTotal] = useState()
+  const [total, setTotal] = useState();
   let totalSum = 0;
- let totalQuantity = 0;
+  let totalQuantity = 0;
   for (let i = 0; i < filtered.length; i++) {
     const { price, Quatity } = filtered[i];
     totalSum += price * Quatity;
   }
   for (let i = 0; i < filtered.length; i++) {
-    const {  Quatity } = filtered[i];
-    totalQuantity +=  Quatity;
+    const { Quatity } = filtered[i];
+    totalQuantity += Quatity;
   }
 
-  //checking loading 
+  //checking loading
   // const [loading, setLoading] = useState(false)
   // if(filtered.length = 0){
   //   setLoading(true)
@@ -150,35 +155,99 @@ const page = () => {
   //   setLoading(false)
   // }
 
-    //checking out
-    const checkout =()=>{
-      handleClickOpenFd()
-    }
+  //checking out
+  const checkout = () => {
+    handleClickOpenFd();
+  };
 
+  //form dialog
+  const [openFd, setOpenFd] = React.useState(false);
 
-    //form dialog
-    const [openFd, setOpenFd] = React.useState(false);
+  const handleClickOpenFd = () => {
+    setOpenFd(true);
+  };
 
-    const handleClickOpenFd = () => {
-      setOpenFd(true);
-    };
-  
-    const handleCloseFd = () => {
-      setOpenFd(false);
-    };
-  
+  const handleCloseFd = () => {
+    setOpenFd(false);
+  };
 
-  
+  //getting customer info
+  const defaultValues = {
+    name: "",
+    campus: "",
+    phone: "",
+  };
+
+  const confirmCheckout = async () => {
+    setButtonDisabled(true);
+    const OrderRef = collection(db, "customers");
+    await addDoc(OrderRef, {
+      filtered,
+      customer,
+      userID: user.uid,
+    }).then(async () => {
+      const collectionRef = collection(db, "cart");
+      try {
+        const querySnapshot = await getDocs(collectionRef);
+
+        // Iterate through the documents and delete each one
+        querySnapshot.forEach(async (doc) => {
+          await deleteDoc(doc.ref);
+        }, sendSMS());
+      } catch (error) {
+        console.error("Error deleting documents:", error);
+      }
+      setButtonDisabled(false);
+      handleCloseFd();
+      setMessage("items successfully checked out. We'll reach out soon");
+      handleClick();
+    });
+  };
+  const [customer, setCustomer] = useState([defaultValues]);
+  // console.log(customer);
+
+  //disable buttton
+  const [isButtonDisabled, setButtonDisabled] = useState(false);
+
+  //sms
+  const myHeaders = new Headers();
+  myHeaders.append(
+    "Authorization",
+    "App 10af914e2785bd8135cee94b1f147c67-d767012e-e449-45cd-8848-4f6d753b2094"
+  );
+  myHeaders.append("Content-Type", "application/json");
+  myHeaders.append("Accept", "application/json");
+
+  const raw = JSON.stringify({
+    messages: [
+      {
+        destinations: [{ to: "233543273886" }],
+        from: "ServiceSMS",
+        text: "check firebase",
+      },
+    ],
+  });
+
+  const requestOptions = {
+    method: "POST",
+    headers: myHeaders,
+    body: raw,
+    redirect: "follow",
+  };
+  const sendSMS = () => {
+    fetch("https://rg84x1.api.infobip.com/sms/2/text/advanced", requestOptions)
+      .then((response) => response.text())
+
+      .catch((error) => console.error(error));
+  };
+
   return (
     <div className={styles.container}>
       <h1>Cart</h1>
 
       <div>
-        
-      {filtered.map((item) => (
-        
+        {filtered.map((item) => (
           <div className={styles.cart} key={item.id}>
-             
             <div className={styles.product}>
               <Image
                 width="224"
@@ -205,26 +274,20 @@ const page = () => {
                 </p>
               </div>
             </div>
-           
-            
           </div>
         ))}
-       
-          <div className={styles.cartTotal}>
-            <p>
-              <span>Total Price</span>
-              <span>
-                GHC{" "}
-                {totalSum}
-              </span>
-            </p>
-            <p>
-              <span>Number of items</span>
-              <span>GHC {totalQuantity}</span>
-            </p>
-            <button onClick={() => checkout()}>Checkout</button>
-          </div>
-       
+
+        <div className={styles.cartTotal}>
+          <p>
+            <span>Total Price</span>
+            <span>GHC {totalSum}</span>
+          </p>
+          <p>
+            <span>Number of items</span>
+            <span>{totalQuantity}</span>
+          </p>
+          <button onClick={() => checkout()}>Checkout</button>
+        </div>
       </div>
 
       <React.Fragment>
@@ -259,18 +322,13 @@ const page = () => {
         color="success"
       />
 
-<Dialog
+      <Dialog
         open={openFd}
-        onClose={handleCloseFd }
+        onClose={handleCloseFd}
         PaperProps={{
-          component: 'form',
+          component: "form",
           onSubmit: (event) => {
-            event.preventDefault();
-            const formData = new FormData(event.currentTarget);
-            const formJson = Object.fromEntries(formData.entries());
-            const email = formJson.email;
-            console.log(email);
-            handleCloseFd ();
+            console.log(customer);
           },
         }}
         maxWidth={"md"}
@@ -278,17 +336,17 @@ const page = () => {
       >
         <DialogTitle id="alert-dialog-title">{"Check Out"}</DialogTitle>
         <DialogContent>
-        
           <TextField
             autoFocus
             required
             margin="dense"
             id="name"
-            name="email"
+            name="name"
             label="Name"
-            type="email"
+            type="text"
             fullWidth
             variant="standard"
+            onChange={(e) => setCustomer({ ...customer, name: e.target.value })}
           />
           <TextField
             autoFocus
@@ -300,8 +358,12 @@ const page = () => {
             type="number"
             fullWidth
             variant="standard"
+            onChange={(e) =>
+              setCustomer({ ...customer, phone: e.target.value })
+            }
           />
-           <TextField
+
+          <TextField
             autoFocus
             required
             margin="dense"
@@ -311,11 +373,20 @@ const page = () => {
             type="text"
             fullWidth
             variant="standard"
+            onChange={(e) =>
+              setCustomer({ ...customer, hostel: e.target.value })
+            }
           />
         </DialogContent>
         <DialogActions>
           <Button onClick={handleCloseFd}>Cancel</Button>
-          <Button type="submit">Check Out</Button>
+          <Button
+            type="submit"
+            disabled={isButtonDisabled}
+            onClick={() => confirmCheckout()}
+          >
+            Check Out
+          </Button>
         </DialogActions>
       </Dialog>
     </div>
