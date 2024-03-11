@@ -26,6 +26,10 @@ const page = () => {
   const router = useRouter();
   const [user] = useAuthState(auth);
   const userSession = typeof window !== 'undefined' ? sessionStorage.getItem("user") : null;
+  const [logoutDisable, setLogoutDisable] = useState(false)
+  const [openCartDisable, setOpencopenCartDisable] = useState(false)
+  const [addTocartdisable, setAddtocartdisbale] =useState(false)
+ 
   
   useEffect(() => {
     if (!user && !userSession) {
@@ -39,6 +43,7 @@ const page = () => {
   const [cartPhrase, setCartPhrase] = useState("Open Cart") 
 
   const openCart = () => {
+    setOpencopenCartDisable(true)
     setCartPhrase("opening")
     router.push("./cart")
    
@@ -100,6 +105,7 @@ const page = () => {
   };
 
   const ConfirmAddtoCart = async () => {
+    setAddtocartdisbale(true)
     setAddState("Adding...");
     const OrderRef = collection(db, "cart");
     await addDoc(OrderRef, {
@@ -110,15 +116,18 @@ const page = () => {
       Quatity: quatity
     })
       .then(() => {
+        setAddtocartdisbale(false)
         handleClose();
         setAddState("Yes");
         handleClick();
       })
       .catch((e) => {
-        console.log(e);
+        setAddtocartdisbale(false)
+        
       });
   };
   const AddtoCart = (docID) => {
+
     handleClickOpen();
     const index = Products.findIndex((product) => product.index === docID);
     setOrder(Products[index]);
@@ -151,16 +160,19 @@ const page = () => {
       <div className={styles.banner}>
         <div className={styles.logout}>
           <button
+           disabled={logoutDisable}
             onClick={() => {
+              setLogoutDisable(true)
               setLogoutPhrase("logging out...")
               signOut(auth);
               sessionStorage.removeItem("user");
+              router.push("./")
             }}
             className={styles["logout-button"]}
           >
            {logoutPhrase}
           </button>
-          <button className={styles["Cart-button"]} onClick={() => {
+          <button disabled={openCartDisable} className={styles["Cart-button"]} onClick={() => {
             openCart()
           }}>{cartPhrase}</button>
         </div>
@@ -227,7 +239,7 @@ const page = () => {
             />
           </DialogContent>
           <DialogActions>
-            <Button onClick={ConfirmAddtoCart}>{addState}</Button>
+            <Button onClick={ConfirmAddtoCart} disabled={addTocartdisable}>{addState}</Button>
             <Button onClick={handleClose} autoFocus>
              Cancel
             </Button>

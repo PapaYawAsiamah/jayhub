@@ -103,7 +103,9 @@ useEffect(() => {
   //deleting item
   const [seletedDocID, setseletedDocID] = useState(null);
   const [deleteState, setDeleteState] = useState("Yes");
+  const [deleteDisable, setDleteDisable] = useState(false)
   const confirmDelete = async () => {
+    setDleteDisable(true)
     setDeleteState("removing");
     const docRef = doc(db, "cart", seletedDocID);
     await deleteDoc(docRef)
@@ -111,9 +113,11 @@ useEffect(() => {
         handleClose();
         setDeleteState("Yes");
         handleClick();
+        setDleteDisable(false)
       })
       .catch((e) => {
-        console.log(e);
+        setDleteDisable(false)
+        
       });
   };
   const deleteItem = (itemID) => {
@@ -289,7 +293,7 @@ useEffect(() => {
             <span>Number of items</span>
             <span>{totalQuantity}</span>
           </p>
-          <button onClick={() => checkout()}>Checkout</button>
+          <button onClick={() => checkout()} className={styles.checkout}>Checkout</button>
         </div>
       </div>
 
@@ -310,7 +314,7 @@ useEffect(() => {
             Remove item?
           </DialogContent>
           <DialogActions>
-            <Button onClick={confirmDelete}>{deleteState}</Button>
+            <Button disabled={deleteDisable} onClick={confirmDelete}>{deleteState}</Button>
             <Button onClick={handleClose} autoFocus>
               Cancel
             </Button>

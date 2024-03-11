@@ -13,40 +13,57 @@ const SignUp = () => {
   );
   const [processPhrase, setProcessPhrase] = useState("Sign Up");
   const [state, setState] = useState(false);
+  const [isButtonDisabled, setButtonDisabled] = useState(false);
    
   const [createUserWithEmailAndPassword] =
     useCreateUserWithEmailAndPassword(auth);
   const router = useRouter();
 
   const handleSignUp = async () => {
+    setButtonDisabled(true)
     setProcessPhrase("signing up...");
-    try {
-      const res = await createUserWithEmailAndPassword(email, password);
+    if(password.length > 6){
+      
 
-      console.log({ res });
-      sessionStorage.setItem("user", true);
-      setEmail("");
-      setPassword("");
-      setState(true);
-    } catch (e) {
-      setState(false);
-      console.error(e);
-      setProcessPhrase("Sign Up");
-    }
-
-    if (state === true) {
-      router.push("/");
-
-      setLoginPhrase("password should be atleeast 6 characters ");
-      setProcessPhrase("Sign Up");
-    } else if (password.length < 6) {
+      try {
+        const res = await createUserWithEmailAndPassword(email, password);
+        setState(true);
+        router.push("/");
+        sessionStorage.setItem("user", true);
+        setEmail("");
+        setPassword("");
+       
+      } catch (e) {
+        setState(false);
+        console.error(e);
+        setProcessPhrase("Sign Up");
+      }
+    } else if(password.length < 6){
       setLoginPhrase("please check password");
       router.push("./sign-up");
+      setProcessPhrase("Sign Up")
+      setButtonDisabled(false)
     } else {
-      setLoginPhrase("user already exists");
-      setState(false);
+      setLoginPhrase("can't login");
+      setProcessPhrase("Sign Up")
+      setButtonDisabled(false)
     }
+    
+
+    // if (state === true) {
+     
+    //   setLoginPhrase("password should be atleeast 6 characters ");
+    //   setProcessPhrase("Sign Up");
+    // } else if (password.length < 6) {
+      
+    // } else{
+    //   setLoginPhrase("Please Check sign up details");
+    //   setState(false);
+    // }
   };
+
+   //disable buttton
+   
 
   return (
     <div>
@@ -57,6 +74,7 @@ const SignUp = () => {
           <input
             type="email"
             placeholder="Email"
+            required
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             className={styles["auth-input"]}
@@ -64,12 +82,13 @@ const SignUp = () => {
           <input
             type="password"
             placeholder="Password"
+            required
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             className={styles["auth-input"]}
           />
-          <button onClick={handleSignUp} className={styles["auth-button"]}>
-            Sign Up
+          <button disabled={false} onClick={handleSignUp} className={styles["auth-button"]}  >
+           {processPhrase}
           </button>
         </div>
       </div>
