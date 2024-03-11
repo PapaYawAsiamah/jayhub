@@ -27,9 +27,11 @@ const page = () => {
   const [user] = useAuthState(auth);
   const userSession = typeof window !== 'undefined' ? sessionStorage.getItem("user") : null;
   
-  if (!user && !userSession) {
-    router.push("/");
-  }
+  useEffect(() => {
+    if (!user && !userSession) {
+      router.push("/");
+    } 
+  },[])
   const [find, setFind] = useState("");
   const [order, setOrder] = useState([]);
  

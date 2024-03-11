@@ -25,7 +25,7 @@ import { useAuthState } from "react-firebase-hooks/auth";
 import { auth } from "@/app/firebase/config";
 import { useRouter } from "next/navigation";
 import { db } from "../firebase/config";
-import { usePathname, useSearchParams } from "next/navigation";
+
 import styles from "../styles/cart.module.css";
 import DeleteIcon from "@mui/icons-material/Delete";
 import useMediaQuery from "@mui/material/useMediaQuery";
@@ -33,20 +33,22 @@ import { useTheme } from "@mui/material/styles";
 import TextField from "@mui/material/TextField";
 import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
-import Select from "@mui/material/Select";
+import Select from "@mui/material/Select"; 
 import InputLabel from "@mui/material/InputLabel";
 
 const page = () => {
   
   const router = useRouter();
-    const userSession = typeof window !== 'undefined' ? sessionStorage.getItem("user") : null;
+  const userSession = typeof window !== 'undefined' ? sessionStorage.getItem("user") : null;
   const [user] = useAuthState(auth);
   const [orders, setOrders] = useState([]); 
   const [filtered, setFilterd] = useState([]);
-
+useEffect(() => {
   if (!user && !userSession) {
     router.push("/");
-  }
+  } 
+},[])
+ 
   //getting data from firebase
   useEffect(() => {
     const reference = collection(db, "cart");
