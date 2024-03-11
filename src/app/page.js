@@ -43,7 +43,7 @@ export default function Home() {
       setProcessPhrase('Sign In')
     }
     else{
-      console.log('ee')
+     
       setLoginPhrase('please check credentials')
       setProcessPhrase('Sign In')
     }

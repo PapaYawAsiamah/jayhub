@@ -37,10 +37,11 @@ import Select from "@mui/material/Select";
 import InputLabel from "@mui/material/InputLabel";
 
 const page = () => {
-  const router = usePathname();
-  const userSession = sessionStorage.getItem("user");
+  
+  const router = useRouter();
+    const userSession = typeof window !== 'undefined' ? sessionStorage.getItem("user") : null;
   const [user] = useAuthState(auth);
-  const [orders, setOrders] = useState([]);
+  const [orders, setOrders] = useState([]); 
   const [filtered, setFilterd] = useState([]);
 
   if (!user && !userSession) {

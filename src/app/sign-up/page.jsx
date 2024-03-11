@@ -13,7 +13,7 @@ const SignUp = () => {
   );
   const [processPhrase, setProcessPhrase] = useState("Sign Up");
   const [state, setState] = useState(false);
-  
+   
   const [createUserWithEmailAndPassword] =
     useCreateUserWithEmailAndPassword(auth);
   const router = useRouter();

@@ -24,12 +24,17 @@ import Snackbar from "@mui/material/Snackbar";
 
 const page = () => {
   const router = useRouter();
-  const userSession = sessionStorage.getItem("user");
+  const [user] = useAuthState(auth);
+  const userSession = typeof window !== 'undefined' ? sessionStorage.getItem("user") : null;
+  
+  if (!user && !userSession) {
+    router.push("/");
+  }
   const [find, setFind] = useState("");
   const [order, setOrder] = useState([]);
-  const [user] = useAuthState(auth);
-  const [logoutPhrase, setLogoutPhrase] = useState("Log out")
-  const [cartPhrase, setCartPhrase] = useState("Open Cart")
+ 
+  const [logoutPhrase, setLogoutPhrase] = useState("Log out") 
+  const [cartPhrase, setCartPhrase] = useState("Open Cart") 
 
   const openCart = () => {
     setCartPhrase("opening")
@@ -37,9 +42,7 @@ const page = () => {
    
   }
 
-  if (!user && !userSession) {
-    router.push("/");
-  }
+ 
 
   const [Products, setProducts] = useState([]);
   const [filtered, setFilterd] = useState([]);
