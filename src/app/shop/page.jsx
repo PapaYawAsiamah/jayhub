@@ -82,7 +82,7 @@ const page = () => {
   useEffect(() => {
     setFilterd(
       Products.filter((user) =>
-        user.name.toLowerCase().includes(find.toLocaleLowerCase())
+        user.name.toLowerCase().includes(find.toLowerCase())
       )
       //  setStudents(filtered)
     );
