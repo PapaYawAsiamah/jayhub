@@ -9,7 +9,7 @@ const SignUp = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loginPhrase, setLoginPhrase] = useState(
-    "password should be atleeast 6 characters"
+    "password should be at least 6 characters"
   );
   const [processPhrase, setProcessPhrase] = useState("Sign Up");
   const [state, setState] = useState(false);
