@@ -72,7 +72,7 @@ export default function Home() {
           />
           <button
             disabled={loginButtonDisable}
-            onClick={handleSignIn}
+            onClick={() => handleSignIn()}
             className={styles["auth-button"]}
           >
             {processPhrase}

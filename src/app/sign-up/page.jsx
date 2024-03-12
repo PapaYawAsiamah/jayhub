@@ -23,7 +23,7 @@ const SignUp = () => {
     setProcessPhrase("signing up...");
     setButtonDisabled(true)
     
-    if(password.length > 6){
+    if(password.length >= 6){
       
 
       try {

@@ -26,10 +26,10 @@ const Navbar = ({find, setFind}) => {
         </form>
       </div>
       <div className={styles.icons}>
-        <Link href="https://wa.me/+233209851044">
+        <Link href="https://wa.me/+233543273886">
           <WhatsAppIcon />
         </Link>
-        <Link href="https://t.snapchat.com/Ewki30kR">
+        <Link href="https://t.snapchat.com/CRhlIjPm">
           <Image src="/snap.avif" width="20" height="20" alt="snapchat" style={{backgroundColor:'rgb(70, 204, 70)'}}  priority/>
         </Link>
         <Link href="https://t.me/thecampustore">
