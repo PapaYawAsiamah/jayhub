@@ -21,35 +21,31 @@ import { addDoc } from "firebase/firestore";
 import { serverTimestamp } from "firebase/firestore";
 import Snackbar from "@mui/material/Snackbar";
 
-
 const page = () => {
   const router = useRouter();
   const [user] = useAuthState(auth);
-  const userSession = typeof window !== 'undefined' ? sessionStorage.getItem("user") : null;
-  const [logoutDisable, setLogoutDisable] = useState(false)
-  const [openCartDisable, setOpencopenCartDisable] = useState(false)
-  const [addTocartdisable, setAddtocartdisbale] =useState(false)
- 
-  
+  const userSession =
+    typeof window !== "undefined" ? sessionStorage.getItem("user") : null;
+  const [logoutDisable, setLogoutDisable] = useState(false);
+  const [openCartDisable, setOpencopenCartDisable] = useState(false);
+  const [addTocartdisable, setAddtocartdisbale] = useState(false);
+
   useEffect(() => {
     if (!user && !userSession) {
       router.push("/");
-    } 
-  },[])
+    }
+  }, []);
   const [find, setFind] = useState("");
   const [order, setOrder] = useState([]);
- 
-  const [logoutPhrase, setLogoutPhrase] = useState("Log out") 
-  const [cartPhrase, setCartPhrase] = useState("Open Cart") 
+
+  const [logoutPhrase, setLogoutPhrase] = useState("Log out");
+  const [cartPhrase, setCartPhrase] = useState("Open Cart");
 
   const openCart = () => {
-    setOpencopenCartDisable(true)
-    setCartPhrase("opening")
-    router.push("./cart")
-   
-  }
-
- 
+    setOpencopenCartDisable(true);
+    setCartPhrase("opening");
+    router.push("./cart");
+  };
 
   const [Products, setProducts] = useState([]);
   const [filtered, setFilterd] = useState([]);
@@ -60,7 +56,7 @@ const page = () => {
   useEffect(() => {
     const reference = collection(db, "products");
 
-    const dbQuery = query(reference, orderBy("name", "asc"));
+    const dbQuery = query(reference, orderBy("index", "asc"));
 
     onSnapshot(dbQuery, (querySnapshot) => {
       let i = 1;
@@ -71,7 +67,6 @@ const page = () => {
           let data = doc.data();
 
           return {
-           
             index: i++,
             ...data,
           };
@@ -79,19 +74,23 @@ const page = () => {
       );
     });
   }, []);
-  useEffect(() => {
-    setFilterd(
-      Products.filter((user) =>
-        user.name.toLowerCase().includes(find.toLowerCase())
-      )
-      //  setStudents(filtered)
-    );
-    if (filtered.length === 0 && find) {
-      setRstate(true);
-    } else if (filtered.length > 0 && find.length === 0) {
-      setRstate(false);
-    }
-  }, [Products, find]);
+
+  // useEffect(() => {
+  //   if (Products.length != 0) {
+  //     setFilterd(
+  //       Products.filter((user) =>
+  //         user.name.toLowerCase().includes(find.toLowerCase())
+  //       )
+  //       //  setStudents(filtered)
+  //     );
+  //   }
+
+  //   if (filtered.length === 0 && find) {
+  //     setRstate(true);
+  //   } else if (filtered.length > 0 && find.length === 0) {
+  //     setRstate(false);
+  //   }
+  // }, [Products, find]);
 
   //adding to cart
 
@@ -105,7 +104,7 @@ const page = () => {
   };
 
   const ConfirmAddtoCart = async () => {
-    setAddtocartdisbale(true)
+    setAddtocartdisbale(true);
     setAddState("Adding...");
     const OrderRef = collection(db, "cart");
     await addDoc(OrderRef, {
@@ -113,21 +112,19 @@ const page = () => {
       created_at: serverTimestamp(),
       updated_at: serverTimestamp(),
       userID: user.uid,
-      Quatity: quatity
+      Quatity: quatity,
     })
       .then(() => {
-        setAddtocartdisbale(false)
+        setAddtocartdisbale(false);
         handleClose();
         setAddState("Yes");
         handleClick();
       })
       .catch((e) => {
-        setAddtocartdisbale(false)
-        
+        setAddtocartdisbale(false);
       });
   };
   const AddtoCart = (docID) => {
-
     handleClickOpen();
     const index = Products.findIndex((product) => product.index === docID);
     setOrder(Products[index]);
@@ -160,21 +157,27 @@ const page = () => {
       <div className={styles.banner}>
         <div className={styles.logout}>
           <button
-           disabled={logoutDisable}
+            disabled={logoutDisable}
             onClick={() => {
-              setLogoutDisable(true)
-              setLogoutPhrase("logging out...")
+              setLogoutDisable(true);
+              setLogoutPhrase("logging out...");
               signOut(auth);
               sessionStorage.removeItem("user");
-              router.push("./")
+              router.push("./");
             }}
             className={styles["logout-button"]}
           >
-           {logoutPhrase}
+            {logoutPhrase}
           </button>
-          <button disabled={openCartDisable} className={styles["Cart-button"]} onClick={() => {
-            openCart()
-          }}>{cartPhrase}</button>
+          <button
+            disabled={openCartDisable}
+            className={styles["Cart-button"]}
+            onClick={() => {
+              openCart();
+            }}
+          >
+            {cartPhrase}
+          </button>
         </div>
         <div className={styles.content}>
           <img
@@ -185,9 +188,9 @@ const page = () => {
         </div>
       </div>
 
-      {!resultState ? (
+      {Products ? (
         <div className={styles.wrapper}>
-          {filtered.map((product) => (
+          {Products.map((product) => (
             <div className={styles.card} key={product.index}>
               <Image
                 className={styles.cardimg}
@@ -200,7 +203,7 @@ const page = () => {
 
               <div className={styles.cardbody}>
                 <h1 className={styles.cardtitle}>{product.name}</h1>
-           
+
                 <h2 className={styles.cardPrice}>{product.price} GHC</h2>
 
                 <div className={styles.contacts}>
@@ -239,9 +242,11 @@ const page = () => {
             />
           </DialogContent>
           <DialogActions>
-            <Button onClick={ConfirmAddtoCart} disabled={addTocartdisable}>{addState}</Button>
+            <Button onClick={ConfirmAddtoCart} disabled={addTocartdisable}>
+              {addState}
+            </Button>
             <Button onClick={handleClose} autoFocus>
-             Cancel
+              Cancel
             </Button>
           </DialogActions>
         </Dialog>

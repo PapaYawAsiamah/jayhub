@@ -12,7 +12,7 @@ const Navbar = ({find, setFind}) => {
           <Image src="/logo.png" width="70" height="70" alt="logo"  priority/>
         </Link>
       </div>
-      <div className={styles.search}>
+      {/* <div className={styles.search}>
         <form>
           <input
             type="text"
@@ -24,7 +24,7 @@ const Navbar = ({find, setFind}) => {
           />
           
         </form>
-      </div>
+      </div> */}
       <div className={styles.icons}>
         <Link href="https://wa.me/+233543273886">
           <WhatsAppIcon />

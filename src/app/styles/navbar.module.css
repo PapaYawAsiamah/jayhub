@@ -1,7 +1,7 @@
 .header{
     background-color: #02090f;
     display: grid;
-    grid-template-columns: repeat(3,1fr );
+    grid-template-columns: repeat(2,1fr );
     padding:0px 25px;
     height: 80px;
     align-items: center;
