@@ -1,16 +1,19 @@
 "use client";
 import Image from "next/image";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import styles from "./page.module.css";
 import { useSignInWithEmailAndPassword } from "react-firebase-hooks/auth";
 import { auth } from "@/app/firebase/config";
 import { useRouter } from "next/navigation";
+import { useAuthState } from "react-firebase-hooks/auth";
 
 export default function Home() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loginPhrase, setLoginPhrase] = useState("");
   const [processPhrase, setProcessPhrase] = useState("Sign In");
+  const userSession = typeof window !== "undefined" ? sessionStorage.getItem("user") : null;
+  const [user] = useAuthState(auth);
   const [state, setState] = useState(false);
   const [signInWithEmailAndPassword] = useSignInWithEmailAndPassword(auth);
   const router = useRouter();
@@ -21,33 +24,38 @@ export default function Home() {
   const handleSignIn = async () => {
     setProcessPhrase("signing in...");
     setloginButtonDisable(true);
-    try {
-      const res = await signInWithEmailAndPassword(email, password);
-      console.log({ res });
-      sessionStorage.setItem("user", true);
-      setEmail("");
-      setPassword("");
-      setState(true);
-      setloginButtonDisable(false);
-    } catch (e) {
-      console.error(e);
-      setProcessPhrase("Sign In");
-      setloginButtonDisable(false);
-    }
-
-    if (state === true) {
+     await signInWithEmailAndPassword(email, password)
+     .then((res) => {
+    //  console.log(res._tokenResponse.registered);
+     if(res._tokenResponse.registered){
       router.push("/shop");
       setState(false);
       setLoginPhrase("");
       setProcessPhrase("Sign In");
       setloginButtonDisable(false);
-    } else {
+      sessionStorage.setItem("user", true);
+     }
+     
+      setEmail("");
+      setPassword("");
+      setState(true);
+      setloginButtonDisable(false);
+      
+     }).catch((e) => {
+      console.error(e);
+      setProcessPhrase("Sign In");
+      setloginButtonDisable(false);
       setLoginPhrase("please check credentials");
       setProcessPhrase("Sign In");
       setloginButtonDisable(false);
-    }
-  };
+    })
+  
+     
+    
 
+    
+  };
+  
   return (
     <div>
       <div className={styles["auth-container"]}>
@@ -91,4 +99,4 @@ export default function Home() {
       </div>
     </div>
   );
-}
+          }

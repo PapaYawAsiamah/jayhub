@@ -24,8 +24,7 @@ import Snackbar from "@mui/material/Snackbar";
 const page = () => {
   const router = useRouter();
   const [user] = useAuthState(auth);
-  const userSession =
-    typeof window !== "undefined" ? sessionStorage.getItem("user") : null;
+  const userSession = typeof window !== "undefined" ? sessionStorage.getItem("user") : null;
   const [logoutDisable, setLogoutDisable] = useState(false);
   const [openCartDisable, setOpencopenCartDisable] = useState(false);
   const [addTocartdisable, setAddtocartdisbale] = useState(false);
