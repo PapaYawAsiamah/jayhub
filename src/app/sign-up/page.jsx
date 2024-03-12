@@ -20,8 +20,9 @@ const SignUp = () => {
   const router = useRouter();
 
   const handleSignUp = async () => {
-    setButtonDisabled(true)
     setProcessPhrase("signing up...");
+    setButtonDisabled(true)
+    
     if(password.length > 6){
       
 
@@ -87,7 +88,7 @@ const SignUp = () => {
             onChange={(e) => setPassword(e.target.value)}
             className={styles["auth-input"]}
           />
-          <button disabled={false} onClick={handleSignUp} className={styles["auth-button"]}  >
+          <button disabled={false} onClick={() => handleSignUp()} className={styles["auth-button"]}  >
            {processPhrase}
           </button>
         </div>
