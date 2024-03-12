@@ -147,7 +147,7 @@ const page = () => {
   const [quatity, setQuantity] = useState(1);
   const handleInputChange = (event) => {
     // Allow only non-negative numbers
-    const inputValue = Math.max(0, parseInt(event.target.value, 10) || 1);
+    const inputValue = Math.max(0, parseInt(event.target.value, 10));
     setQuantity(inputValue);
   };
 
